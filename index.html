@@ -428,22 +428,29 @@
       messageContainer.classList.remove('hidden');
       
       try {
-        // In a real implementation, you would send this data to your Google Apps Script web app
-        // For now, we'll simulate the submission and show a success message
-        
-        console.log('Form data to be submitted:', data);
-        
         // Send data to Google Apps Script
-        const response = await fetch('https://script.google.com/macros/s/AKfycbxVHvCk1ktzbKyONKCcNElttrmoBS8-lKukGCuPBAxJJfW9L2vptd2wAB89TaBv7vgNKw/exec', {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbx6qfJDN7NKCwyoXiYgZwgCeLCJl5zrfFUp2JdWw89DPe57xkjL4KNw99m7d9YRbVz2cw/exec', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(data),
-          mode: 'no-cors' // This might help with CORS issues
         });
         
-        const result = await response.json();
+        // Check if response is OK
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Try to parse JSON response
+        let result;
+        try {
+          result = await response.json();
+        } catch (parseError) {
+          const responseText = await response.text();
+          console.error('Response text:', responseText);
+          throw new Error(`Failed to parse JSON response: ${parseError.message}. Response text: ${responseText}`);
+        }
         
         if (result.result === 'success') {
           // Show success message
