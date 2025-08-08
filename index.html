@@ -3,160 +3,219 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Limonella - Raccolta Dati V2</title>
+    <title>Limonella - Raccolta Dati</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #fefce8; }
-        h1, h2 { font-family: 'Playfair Display', serif; }
-        .form-input { @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition; }
-        .form-label { @apply block text-sm font-medium text-gray-700 mb-1; }
-        .card { @apply bg-white p-6 rounded-xl shadow-lg; }
-        .btn { @apply px-6 py-2 rounded-lg font-semibold text-white shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed; }
-        .btn-primary { @apply bg-amber-500 hover:bg-amber-600; }
-        .btn-secondary { @apply bg-gray-500 hover:bg-gray-600; }
-        .calculated-field { @apply bg-gray-100 text-gray-800 font-bold; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .form-section {
+            background-color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+        }
+        .section-title {
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 1rem;
+        }
+        .form-input {
+             @apply mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm;
+        }
+        .form-label {
+            @apply block text-sm font-medium text-gray-700;
+        }
+        .calculated-field {
+            @apply bg-gray-100 font-semibold;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
 </head>
-<body class="text-gray-800">
+<body class="bg-gray-50">
 
-    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
-        <header class="text-center mb-8">
-            <h1 class="text-5xl md:text-6xl text-amber-600">Limonella</h1>
-            <p class="text-lg text-gray-600 mt-2">WebApp con calcoli automatici</p>
-        </header>
+    <!-- Schermata di Accesso con Password -->
+    <div id="password-overlay" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-sm mx-4">
+            <h2 class="text-2xl font-bold mb-2 text-center text-gray-800">Accesso Manager</h2>
+            <p class="text-gray-600 mb-6 text-center">Inserisci la password per continuare.</p>
+            <form id="password-form">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" id="password" class="form-input" autofocus>
+                <p id="password-error" class="text-red-500 text-sm mt-2 hidden">Password errata. Riprova.</p>
+                <button type="submit" class="mt-6 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Accedi</button>
+            </form>
+        </div>
+    </div>
 
-        <form id="data-form" class="space-y-8">
-            <div class="card">
-                 <h2 class="text-2xl font-bold mb-4 border-b pb-2">Data</h2>
-                 <div>
-                    <label for="date" class="form-label">Seleziona la data</label>
-                    <input type="date" id="date" name="date" class="form-input" required>
-                </div>
+    <!-- Contenuto Principale (nascosto di default) -->
+    <div id="main-content" class="hidden">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <!-- Header -->
+            <div class="text-center mb-10">
+                <h1 class="text-4xl font-bold text-gray-900">Limonella</h1>
+                <p class="mt-2 text-lg text-gray-600">Inserimento Dati Finanziari Giornalieri</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                <!-- Lunch Section -->
-                <div class="card space-y-4">
-                    <h2 class="text-2xl font-bold border-b pb-2">Pranzo</h2>
-                    <div><label for="lunchCovers" class="form-label">Coperti</label><input type="number" id="lunchCovers" name="lunchCovers" class="form-input" placeholder="0"></div>
-                    <div><label for="lunchFood" class="form-label">Cibo Pranzo (€)</label><input type="number" step="0.01" id="lunchFood" name="lunchFood" class="form-input" placeholder="0.00"></div>
-                    <div><label for="lunchBeverage" class="form-label">Bevande Pranzo (€)</label><input type="number" step="0.01" id="lunchBeverage" name="lunchBeverage" class="form-input" placeholder="0.00"></div>
-                    <div><label for="lunchSC" class="form-label">Servizio Pranzo (SC) (€)</label><input type="number" step="0.01" id="lunchSC" name="lunchSC" class="form-input" placeholder="0.00"></div>
-                    <div><label for="lunchVAT" class="form-label">IVA Pranzo (€)</label><input type="number" step="0.01" id="lunchVAT" name="lunchVAT" class="form-input" placeholder="0.00"></div>
-                    <div><label for="lunchDiscount" class="form-label">Sconto Pranzo (€)</label><input type="number" step="0.01" id="lunchDiscount" name="lunchDiscount" class="form-input" placeholder="0.00"></div>
-                    <div><label for="lunchTotal" class="form-label">Totale Pranzo (€)</label><input type="number" step="0.01" id="lunchTotal" name="lunchTotal" class="form-input calculated-field" readonly></div>
+            <!-- Messaggi di Successo/Errore -->
+            <div id="message-box" class="hidden mb-6 p-4 rounded-md"></div>
+
+            <!-- Form -->
+            <form id="data-form" class="space-y-8">
+                <!-- Sezione Data -->
+                <div class="form-section">
+                    <div class="flex items-center space-x-4">
+                        <label for="date" class="form-label whitespace-nowrap">Data</label>
+                        <input type="date" id="date" name="date" required class="form-input md:w-auto">
+                    </div>
                 </div>
 
-                <!-- Dinner Section -->
-                <div class="card space-y-4">
-                    <h2 class="text-2xl font-bold border-b pb-2">Cena</h2>
-                    <div><label for="dinnerCovers" class="form-label">Coperti</label><input type="number" id="dinnerCovers" name="dinnerCovers" class="form-input" placeholder="0"></div>
-                    <div><label for="dinnerFood" class="form-label">Cibo Cena (€)</label><input type="number" step="0.01" id="dinnerFood" name="dinnerFood" class="form-input" placeholder="0.00"></div>
-                    <div><label for="dinnerBeverage" class="form-label">Bevande Cena (€)</label><input type="number" step="0.01" id="dinnerBeverage" name="dinnerBeverage" class="form-input" placeholder="0.00"></div>
-                    <div><label for="dinnerSC" class="form-label">Servizio Cena (SC) (€)</label><input type="number" step="0.01" id="dinnerSC" name="dinnerSC" class="form-input" placeholder="0.00"></div>
-                    <div><label for="dinnerIGIC" class="form-label">IGIC Cena (€)</label><input type="number" step="0.01" id="dinnerIGIC" name="dinnerIGIC" class="form-input" placeholder="0.00"></div>
-                    <div><label for="dinnerDiscount" class="form-label">Sconto Cena (€)</label><input type="number" step="0.01" id="dinnerDiscount" name="dinnerDiscount" class="form-input" placeholder="0.00"></div>
-                    <div><label for="dinnerTotal" class="form-label">Totale Cena (€)</label><input type="number" step="0.01" id="dinnerTotal" name="dinnerTotal" class="form-input calculated-field" readonly></div>
+                <!-- Sezione Pranzo -->
+                <div class="form-section">
+                    <h2 class="section-title">Servizio Pranzo</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div><label for="lunchCovers" class="form-label">Coperti</label><input type="number" id="lunchCovers" name="lunchCovers" class="form-input" placeholder="0"></div>
+                        <div><label for="lunchFood" class="form-label">Cibo (€)</label><input type="number" step="0.01" id="lunchFood" name="lunchFood" class="form-input" placeholder="0.00"></div>
+                        <div><label for="lunchBeverage" class="form-label">Bevande (€)</label><input type="number" step="0.01" id="lunchBeverage" name="lunchBeverage" class="form-input" placeholder="0.00"></div>
+                        <div><label for="lunchSC" class="form-label">Servizio (SC) (€)</label><input type="number" step="0.01" id="lunchSC" name="lunchSC" class="form-input" placeholder="0.00"></div>
+                        <div><label for="lunchIGIC" class="form-label">IGIC (€)</label><input type="number" step="0.01" id="lunchIGIC" name="lunchIGIC" class="form-input" placeholder="0.00"></div>
+                        <div><label for="lunchDiscount" class="form-label">Sconto (€)</label><input type="number" step="0.01" id="lunchDiscount" name="lunchDiscount" class="form-input" placeholder="0.00"></div>
+                        <div class="lg:col-start-4"><label for="lunchTotal" class="form-label">Totale Pranzo (€)</label><input type="number" step="0.01" id="lunchTotal" name="lunchTotal" class="form-input calculated-field" readonly></div>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Cashflow Section -->
-            <div class="card">
-                <h2 class="text-2xl font-bold mb-4 border-b pb-2">Cassa e Vendite</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div><label for="dayTotal" class="form-label">Totale Giorno (€)</label><input type="number" step="0.01" id="dayTotal" name="dayTotal" class="form-input calculated-field" readonly></div>
-                    <div><label for="card" class="form-label">Carta (€)</label><input type="number" step="0.01" id="card" name="card" class="form-input" placeholder="0.00"></div>
-                    <div><label for="cash" class="form-label">Contanti (€)</label><input type="number" step="0.01" id="cash" name="cash" class="form-input" placeholder="0.00"></div>
-                    <div><label for="pettyCash" class="form-label">Fondo Cassa (€)</label><input type="number" step="0.01" id="pettyCash" name="pettyCash" class="form-input" placeholder="0.00"></div>
-                    <div><label for="depositRedeemed" class="form-label">Acconto Riscattato (€)</label><input type="number" step="0.01" id="depositRedeemed" name="depositRedeemed" class="form-input" placeholder="0.00"></div>
-                    <div><label for="refund" class="form-label">Rimborso (€)</label><input type="number" step="0.01" id="refund" name="refund" class="form-input" placeholder="0.00"></div>
-                    <div><label for="netSales" class="form-label">Vendite Nette (€)</label><input type="number" step="0.01" id="netSales" name="netSales" class="form-input" placeholder="0.00"></div>
-                    <div><label for="cashflow" class="form-label">Flusso di Cassa (€)</label><input type="number" step="0.01" id="cashflow" name="cashflow" class="form-input" placeholder="0.00"></div>
-                    <div class="md:col-span-2"><label for="discrepancy" class="form-label">Discrepanza (€)</label><input type="number" step="0.01" id="discrepancy" name="discrepancy" class="form-input calculated-field" readonly></div>
+                <!-- Sezione Cena -->
+                <div class="form-section">
+                    <h2 class="section-title">Servizio Cena</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div><label for="dinnerCovers" class="form-label">Coperti</label><input type="number" id="dinnerCovers" name="dinnerCovers" class="form-input" placeholder="0"></div>
+                        <div><label for="dinnerFood" class="form-label">Cibo (€)</label><input type="number" step="0.01" id="dinnerFood" name="dinnerFood" class="form-input" placeholder="0.00"></div>
+                        <div><label for="dinnerBeverage" class="form-label">Bevande (€)</label><input type="number" step="0.01" id="dinnerBeverage" name="dinnerBeverage" class="form-input" placeholder="0.00"></div>
+                        <div><label for="dinnerSC" class="form-label">Servizio (SC) (€)</label><input type="number" step="0.01" id="dinnerSC" name="dinnerSC" class="form-input" placeholder="0.00"></div>
+                        <div><label for="dinnerIGIC" class="form-label">IGIC (€)</label><input type="number" step="0.01" id="dinnerIGIC" name="dinnerIGIC" class="form-input" placeholder="0.00"></div>
+                        <div><label for="dinnerDiscount" class="form-label">Sconto (€)</label><input type="number" step="0.01" id="dinnerDiscount" name="dinnerDiscount" class="form-input" placeholder="0.00"></div>
+                        <div class="lg:col-start-4"><label for="dinnerTotal" class="form-label">Totale Cena (€)</label><input type="number" step="0.01" id="dinnerTotal" name="dinnerTotal" class="form-input calculated-field" readonly></div>
+                    </div>
                 </div>
-            </div>
 
-            <div class="flex items-center justify-end space-x-4 mt-8">
-                <button type="button" id="clear-btn" class="btn btn-secondary">Pulisci</button>
-                <button type="submit" id="save-btn" class="btn btn-primary">Salva Dati</button>
-            </div>
-        </form>
+                <!-- Sezione Cassa e Controlli -->
+                <div class="form-section">
+                    <h2 class="section-title">Cassa e Controlli Finanziari</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div><label for="card" class="form-label">Carta (€)</label><input type="number" step="0.01" id="card" name="card" class="form-input" placeholder="0.00"></div>
+                        <div><label for="cash" class="form-label">Contanti (€)</label><input type="number" step="0.01" id="cash" name="cash" class="form-input" placeholder="0.00"></div>
+                        <div><label for="pettyCash" class="form-label">Fondo Cassa (€)</label><input type="number" step="0.01" id="pettyCash" name="pettyCash" class="form-input" placeholder="0.00"></div>
+                        <div><label for="depositRedeemed" class="form-label">Acconto Riscattato (€)</label><input type="number" step="0.01" id="depositRedeemed" name="depositRedeemed" class="form-input" placeholder="0.00"></div>
+                        <div><label for="refund" class="form-label">Rimborso (€)</label><input type="number" step="0.01" id="refund" name="refund" class="form-input" placeholder="0.00"></div>
+                        <div><label for="netSales" class="form-label">Vendite Nette (€)</label><input type="number" step="0.01" id="netSales" name="netSales" class="form-input" placeholder="0.00"></div>
+                        <div><label for="cashflow" class="form-label">Flusso di Cassa (€)</label><input type="number" step="0.01" id="cashflow" name="cashflow" class="form-input" placeholder="0.00"></div>
+                        <hr class="lg:col-span-4 my-2">
+                        <div class="lg:col-span-2"><label for="dayTotal" class="form-label">Totale Giorno (€)</label><input type="number" step="0.01" id="dayTotal" name="dayTotal" class="form-input calculated-field" readonly></div>
+                        <div class="lg:col-span-2"><label for="discrepancy" class="form-label">Discrepanza (€)</label><input type="number" step="0.01" id="discrepancy" name="discrepancy" class="form-input calculated-field" readonly></div>
+                    </div>
+                </div>
 
-        <div id="message-box" class="hidden fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"></div>
+                <!-- Pulsanti di Azione -->
+                <div class="flex justify-center items-center space-x-4 pt-4">
+                     <button type="button" id="clear-btn" class="inline-flex items-center px-6 py-3 border border-gray-300 text-base font-medium rounded-md shadow-sm text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Pulisci
+                    </button>
+                    <button type="submit" id="save-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Salva Dati
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <script>
-        // --- URL CORRETTO INSERITO ---
+        // --- LOGICA DI PROTEZIONE CON PASSWORD ---
+        // ATTENZIONE: Cambia "Limonella2025" con la tua password segreta.
+        // Questa è una protezione base, la password è visibile nel codice sorgente.
+        const CORRECT_PASSWORD = 'Limonella2025';
+
+        const passwordOverlay = document.getElementById('password-overlay');
+        const passwordForm = document.getElementById('password-form');
+        const passwordInput = document.getElementById('password');
+        const passwordError = document.getElementById('password-error');
+        const mainContent = document.getElementById('main-content');
+
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                // Nasconde la schermata di accesso e mostra il contenuto principale
+                passwordOverlay.classList.add('hidden');
+                mainContent.classList.remove('hidden');
+            } else {
+                // Mostra l'errore e resetta il campo
+                passwordError.classList.remove('hidden');
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        });
+
+
+        // --- LOGICA DEL FORM PRINCIPALE ---
         const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHtF0A6Zzd2L2OA0eX5P6FQl4wSMOihzEXLrw3rxkXSh5c70uEpzT1pLesVxdoc_OPdA/exec';
 
-        // Get all form elements
         const form = document.getElementById('data-form');
         const allInputs = form.querySelectorAll('input');
         const saveBtn = document.getElementById('save-btn');
         const clearBtn = document.getElementById('clear-btn');
         const messageBox = document.getElementById('message-box');
 
-        // Set today's date
         document.getElementById('date').valueAsDate = new Date();
-
-        // Function to get numeric value from an input
         const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
 
-        // --- CALCULATION LOGIC ---
         function runAllCalculations() {
-            // Lunch Total
-            const lunchTotal = getVal('lunchFood') + getVal('lunchBeverage') + getVal('lunchSC') + getVal('lunchVAT') - getVal('lunchDiscount');
+            const lunchTotal = getVal('lunchFood') + getVal('lunchBeverage') + getVal('lunchSC') + getVal('lunchIGIC') - getVal('lunchDiscount');
             document.getElementById('lunchTotal').value = lunchTotal.toFixed(2);
 
-            // Dinner Total
             const dinnerTotal = getVal('dinnerFood') + getVal('dinnerBeverage') + getVal('dinnerSC') + getVal('dinnerIGIC') - getVal('dinnerDiscount');
             document.getElementById('dinnerTotal').value = dinnerTotal.toFixed(2);
 
-            // Day Total
             const dayTotal = lunchTotal + dinnerTotal;
             document.getElementById('dayTotal').value = dayTotal.toFixed(2);
             
-            // Discrepancy
             const totalPayments = getVal('card') + getVal('cash') + getVal('depositRedeemed') - getVal('pettyCash') - getVal('refund');
             const discrepancy = totalPayments - dayTotal;
             document.getElementById('discrepancy').value = discrepancy.toFixed(2);
         }
 
-        // Add event listeners to all non-readonly inputs
         allInputs.forEach(input => {
             if (!input.readOnly) {
                 input.addEventListener('input', runAllCalculations);
             }
         });
         
-        // --- FORM SUBMISSION ---
         async function handleSave(e) {
             e.preventDefault();
-            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'INCOLLA_IL_TUO_URL_QUI') {
-                showMessage('Errore: Devi inserire l\'URL di Google Apps Script nel codice.', true);
-                return;
-            }
-
             saveBtn.disabled = true;
             saveBtn.textContent = 'Salvataggio...';
 
             const formData = new FormData(form);
             const data = {};
             for (let [key, value] of formData.entries()) {
-                // Use the element's name attribute as the key
                 const element = form.elements[key];
-                if (element.type === 'date') {
-                    data[key] = value;
-                } else {
-                    data[key] = parseFloat(value) || 0;
-                }
+                data[key] = (element.type === 'date') ? value : (parseFloat(value) || 0);
             }
 
             try {
-                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                await fetch(GOOGLE_SCRIPT_URL, {
                     method: 'POST',
                     mode: 'no-cors', 
                     headers: { 'Content-Type': 'application/json' },
@@ -166,7 +225,7 @@
                 showMessage('Dati inviati con successo a Google Sheets!');
                 form.reset();
                 document.getElementById('date').valueAsDate = new Date();
-                runAllCalculations(); // Reset calculated fields to 0.00
+                runAllCalculations();
 
             } catch (error) {
                 console.error('Errore durante l\'invio:', error);
@@ -187,15 +246,14 @@
         clearBtn.addEventListener('click', handleClear);
 
         function showMessage(text, isError = false) {
-            messageBox.textContent = text;
-            messageBox.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg z-50 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+            messageBox.innerHTML = `<p>${text}</p>`;
+            messageBox.className = `p-4 rounded-md mb-6 ${isError ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'}`;
             
             setTimeout(() => {
                 messageBox.className += ' hidden';
             }, 4000);
         }
         
-        // Initial calculation on page load
         runAllCalculations();
     </script>
 </body>
