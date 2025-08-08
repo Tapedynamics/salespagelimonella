@@ -1,482 +1,202 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Limonella Daily Financial Data Entry</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f8fafc;
-    }
-    .form-section {
-      background-color: #ffffff;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    }
-    .section-title {
-      border-bottom: 2px solid #e2e8f0;
-    }
-    input[type="number"] {
-      appearance: textfield;
-    }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Limonella - Raccolta Dati V2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #fefce8; }
+        h1, h2 { font-family: 'Playfair Display', serif; }
+        .form-input { @apply w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition; }
+        .form-label { @apply block text-sm font-medium text-gray-700 mb-1; }
+        .card { @apply bg-white p-6 rounded-xl shadow-lg; }
+        .btn { @apply px-6 py-2 rounded-lg font-semibold text-white shadow-md transition-transform transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed; }
+        .btn-primary { @apply bg-amber-500 hover:bg-amber-600; }
+        .btn-secondary { @apply bg-gray-500 hover:bg-gray-600; }
+        .calculated-field { @apply bg-gray-100 text-gray-800 font-bold; }
+    </style>
 </head>
-<body class="bg-gray-50">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <!-- Header -->
-    <div class="text-center mb-10">
-      <h1 class="text-3xl font-bold text-gray-900">Limonella Daily Financial Data Entry</h1>
-      <p class="mt-2 text-gray-600">Enter daily financial data for Limonella restaurant</p>
+<body class="text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-5xl">
+        <header class="text-center mb-8">
+            <h1 class="text-5xl md:text-6xl text-amber-600">Limonella</h1>
+            <p class="text-lg text-gray-600 mt-2">WebApp con calcoli automatici</p>
+        </header>
+
+        <form id="data-form" class="space-y-8">
+            <div class="card">
+                 <h2 class="text-2xl font-bold mb-4 border-b pb-2">Data</h2>
+                 <div>
+                    <label for="date" class="form-label">Seleziona la data</label>
+                    <input type="date" id="date" name="date" class="form-input" required>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Lunch Section -->
+                <div class="card space-y-4">
+                    <h2 class="text-2xl font-bold border-b pb-2">Pranzo</h2>
+                    <div><label for="lunchCovers" class="form-label">Coperti</label><input type="number" id="lunchCovers" name="lunchCovers" class="form-input" placeholder="0"></div>
+                    <div><label for="lunchFood" class="form-label">Cibo Pranzo (€)</label><input type="number" step="0.01" id="lunchFood" name="lunchFood" class="form-input" placeholder="0.00"></div>
+                    <div><label for="lunchBeverage" class="form-label">Bevande Pranzo (€)</label><input type="number" step="0.01" id="lunchBeverage" name="lunchBeverage" class="form-input" placeholder="0.00"></div>
+                    <div><label for="lunchSC" class="form-label">Servizio Pranzo (SC) (€)</label><input type="number" step="0.01" id="lunchSC" name="lunchSC" class="form-input" placeholder="0.00"></div>
+                    <div><label for="lunchVAT" class="form-label">IVA Pranzo (€)</label><input type="number" step="0.01" id="lunchVAT" name="lunchVAT" class="form-input" placeholder="0.00"></div>
+                    <div><label for="lunchDiscount" class="form-label">Sconto Pranzo (€)</label><input type="number" step="0.01" id="lunchDiscount" name="lunchDiscount" class="form-input" placeholder="0.00"></div>
+                    <div><label for="lunchTotal" class="form-label">Totale Pranzo (€)</label><input type="number" step="0.01" id="lunchTotal" name="lunchTotal" class="form-input calculated-field" readonly></div>
+                </div>
+
+                <!-- Dinner Section -->
+                <div class="card space-y-4">
+                    <h2 class="text-2xl font-bold border-b pb-2">Cena</h2>
+                    <div><label for="dinnerCovers" class="form-label">Coperti</label><input type="number" id="dinnerCovers" name="dinnerCovers" class="form-input" placeholder="0"></div>
+                    <div><label for="dinnerFood" class="form-label">Cibo Cena (€)</label><input type="number" step="0.01" id="dinnerFood" name="dinnerFood" class="form-input" placeholder="0.00"></div>
+                    <div><label for="dinnerBeverage" class="form-label">Bevande Cena (€)</label><input type="number" step="0.01" id="dinnerBeverage" name="dinnerBeverage" class="form-input" placeholder="0.00"></div>
+                    <div><label for="dinnerSC" class="form-label">Servizio Cena (SC) (€)</label><input type="number" step="0.01" id="dinnerSC" name="dinnerSC" class="form-input" placeholder="0.00"></div>
+                    <div><label for="dinnerIGIC" class="form-label">IGIC Cena (€)</label><input type="number" step="0.01" id="dinnerIGIC" name="dinnerIGIC" class="form-input" placeholder="0.00"></div>
+                    <div><label for="dinnerDiscount" class="form-label">Sconto Cena (€)</label><input type="number" step="0.01" id="dinnerDiscount" name="dinnerDiscount" class="form-input" placeholder="0.00"></div>
+                    <div><label for="dinnerTotal" class="form-label">Totale Cena (€)</label><input type="number" step="0.01" id="dinnerTotal" name="dinnerTotal" class="form-input calculated-field" readonly></div>
+                </div>
+            </div>
+
+            <!-- Cashflow Section -->
+            <div class="card">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-2">Cassa e Vendite</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                    <div><label for="dayTotal" class="form-label">Totale Giorno (€)</label><input type="number" step="0.01" id="dayTotal" name="dayTotal" class="form-input calculated-field" readonly></div>
+                    <div><label for="card" class="form-label">Carta (€)</label><input type="number" step="0.01" id="card" name="card" class="form-input" placeholder="0.00"></div>
+                    <div><label for="cash" class="form-label">Contanti (€)</label><input type="number" step="0.01" id="cash" name="cash" class="form-input" placeholder="0.00"></div>
+                    <div><label for="pettyCash" class="form-label">Fondo Cassa (€)</label><input type="number" step="0.01" id="pettyCash" name="pettyCash" class="form-input" placeholder="0.00"></div>
+                    <div><label for="depositRedeemed" class="form-label">Acconto Riscattato (€)</label><input type="number" step="0.01" id="depositRedeemed" name="depositRedeemed" class="form-input" placeholder="0.00"></div>
+                    <div><label for="refund" class="form-label">Rimborso (€)</label><input type="number" step="0.01" id="refund" name="refund" class="form-input" placeholder="0.00"></div>
+                    <div><label for="netSales" class="form-label">Vendite Nette (€)</label><input type="number" step="0.01" id="netSales" name="netSales" class="form-input" placeholder="0.00"></div>
+                    <div><label for="cashflow" class="form-label">Flusso di Cassa (€)</label><input type="number" step="0.01" id="cashflow" name="cashflow" class="form-input" placeholder="0.00"></div>
+                    <div class="md:col-span-2"><label for="discrepancy" class="form-label">Discrepanza (€)</label><input type="number" step="0.01" id="discrepancy" name="discrepancy" class="form-input calculated-field" readonly></div>
+                </div>
+            </div>
+
+            <div class="flex items-center justify-end space-x-4 mt-8">
+                <button type="button" id="clear-btn" class="btn btn-secondary">Pulisci</button>
+                <button type="submit" id="save-btn" class="btn btn-primary">Salva Dati</button>
+            </div>
+        </form>
+
+        <div id="message-box" class="hidden fixed top-5 right-5 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50"></div>
     </div>
 
-    <!-- Success/Error Messages -->
-    <div id="messageContainer" class="hidden mb-6 p-4 rounded-md">
-    </div>
+    <script>
+        // --- URL CORRETTO INSERITO ---
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxHtF0A6Zzd2L2OA0eX5P6FQl4wSMOihzEXLrw3rxkXSh5c70uEpzT1pLesVxdoc_OPdA/exec';
 
-    <!-- Data Entry Form -->
-    <form id="financialDataForm" class="space-y-8">
-      <!-- Date Input -->
-      <div class="form-section rounded-lg p-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="md:col-span-1">
-            <label for="date" class="block text-sm font-medium text-gray-700">Date</label>
-            <input type="date" id="date" name="date" required
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-        </div>
-      </div>
+        // Get all form elements
+        const form = document.getElementById('data-form');
+        const allInputs = form.querySelectorAll('input');
+        const saveBtn = document.getElementById('save-btn');
+        const clearBtn = document.getElementById('clear-btn');
+        const messageBox = document.getElementById('message-box');
 
-      <!-- Lunch Section -->
-      <div class="form-section rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4 section-title pb-2">Lunch Service</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <label for="lunchCovers" class="block text-sm font-medium text-gray-700">Covers</label>
-            <input type="number" id="lunchCovers" name="lunchCovers" min="0" step="1"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchFood" class="block text-sm font-medium text-gray-700">Food (€)</label>
-            <input type="number" id="lunchFood" name="lunchFood" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchBeverage" class="block text-sm font-medium text-gray-700">Beverage (€)</label>
-            <input type="number" id="lunchBeverage" name="lunchBeverage" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchSC" class="block text-sm font-medium text-gray-700">SC (€)</label>
-            <input type="number" id="lunchSC" name="lunchSC" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchVAT" class="block text-sm font-medium text-gray-700">VAT (€)</label>
-            <input type="number" id="lunchVAT" name="lunchVAT" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchDiscount" class="block text-sm font-medium text-gray-700">Discount (€)</label>
-            <input type="number" id="lunchDiscount" name="lunchDiscount" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchAvgSpending" class="block text-sm font-medium text-gray-700">Avg Spending (€)</label>
-            <input type="number" id="lunchAvgSpending" name="lunchAvgSpending" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-          <div>
-            <label for="lunchTotal" class="block text-sm font-medium text-gray-700">Total (€)</label>
-            <input type="number" id="lunchTotal" name="lunchTotal" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-        </div>
-      </div>
+        // Set today's date
+        document.getElementById('date').valueAsDate = new Date();
 
-      <!-- Dinner Section -->
-      <div class="form-section rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4 section-title pb-2">Dinner Service</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <label for="dinnerCovers" class="block text-sm font-medium text-gray-700">Covers</label>
-            <input type="number" id="dinnerCovers" name="dinnerCovers" min="0" step="1"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerFood" class="block text-sm font-medium text-gray-700">Food (€)</label>
-            <input type="number" id="dinnerFood" name="dinnerFood" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerBeverage" class="block text-sm font-medium text-gray-700">Beverage (€)</label>
-            <input type="number" id="dinnerBeverage" name="dinnerBeverage" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerSC" class="block text-sm font-medium text-gray-700">SC (€)</label>
-            <input type="number" id="dinnerSC" name="dinnerSC" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerIGIC" class="block text-sm font-medium text-gray-700">IGIC (€)</label>
-            <input type="number" id="dinnerIGIC" name="dinnerIGIC" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerDiscount" class="block text-sm font-medium text-gray-700">Discount (€)</label>
-            <input type="number" id="dinnerDiscount" name="dinnerDiscount" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="nyeDepositPaid" class="block text-sm font-medium text-gray-700">NYE Deposit Paid (€)</label>
-            <input type="number" id="nyeDepositPaid" name="nyeDepositPaid" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerDepositRedeemed" class="block text-sm font-medium text-gray-700">Deposit Redeemed (€)</label>
-            <input type="number" id="dinnerDepositRedeemed" name="dinnerDepositRedeemed" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerAvgSpending" class="block text-sm font-medium text-gray-700">Avg Spending (€)</label>
-            <input type="number" id="dinnerAvgSpending" name="dinnerAvgSpending" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-          <div>
-            <label for="dinnerTotal" class="block text-sm font-medium text-gray-700">Total (€)</label>
-            <input type="number" id="dinnerTotal" name="dinnerTotal" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-        </div>
-      </div>
+        // Function to get numeric value from an input
+        const getVal = (id) => parseFloat(document.getElementById(id).value) || 0;
 
-      <!-- Daily Totals Section -->
-      <div class="form-section rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4 section-title pb-2">Daily Totals</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <label for="dayTotal" class="block text-sm font-medium text-gray-700">Day Total (€)</label>
-            <input type="number" id="dayTotal" name="dayTotal" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-          <div>
-            <label for="totAvgSpending" class="block text-sm font-medium text-gray-700">Total Avg Spending (€)</label>
-            <input type="number" id="totAvgSpending" name="totAvgSpending" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-        </div>
-      </div>
+        // --- CALCULATION LOGIC ---
+        function runAllCalculations() {
+            // Lunch Total
+            const lunchTotal = getVal('lunchFood') + getVal('lunchBeverage') + getVal('lunchSC') + getVal('lunchVAT') - getVal('lunchDiscount');
+            document.getElementById('lunchTotal').value = lunchTotal.toFixed(2);
 
-      <!-- Payment Methods Section -->
-      <div class="form-section rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4 section-title pb-2">Payment Methods</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <label for="card" class="block text-sm font-medium text-gray-700">Card (€)</label>
-            <input type="number" id="card" name="card" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="pettyCash" class="block text-sm font-medium text-gray-700">Petty Cash (€)</label>
-            <input type="number" id="pettyCash" name="pettyCash" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="paymentDepositRedeemed" class="block text-sm font-medium text-gray-700">Deposit Redeemed (€)</label>
-            <input type="number" id="paymentDepositRedeemed" name="paymentDepositRedeemed" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="refund" class="block text-sm font-medium text-gray-700">Refund (€)</label>
-            <input type="number" id="refund" name="refund" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-          <div>
-            <label for="cash" class="block text-sm font-medium text-gray-700">Cash (€)</label>
-            <input type="number" id="cash" name="cash" min="0" step="0.01"
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
-          </div>
-        </div>
-      </div>
+            // Dinner Total
+            const dinnerTotal = getVal('dinnerFood') + getVal('dinnerBeverage') + getVal('dinnerSC') + getVal('dinnerIGIC') - getVal('dinnerDiscount');
+            document.getElementById('dinnerTotal').value = dinnerTotal.toFixed(2);
 
-      <!-- Financial Controls Section -->
-      <div class="form-section rounded-lg p-6">
-        <h2 class="text-xl font-semibold text-gray-900 mb-4 section-title pb-2">Financial Controls</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div>
-            <label for="sumNetSales" class="block text-sm font-medium text-gray-700">Sum Net Sales (€)</label>
-            <input type="number" id="sumNetSales" name="sumNetSales" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-          <div>
-            <label for="discrepancy" class="block text-sm font-medium text-gray-700">Discrepancy (€)</label>
-            <input type="number" id="discrepancy" name="discrepancy" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-          <div>
-            <label for="cashflow" class="block text-sm font-medium text-gray-700">Cashflow (€)</label>
-            <input type="number" id="cashflow" name="cashflow" min="0" step="0.01" readonly
-              class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 bg-gray-100 sm:text-sm">
-          </div>
-        </div>
-      </div>
-
-      <!-- Submit Button -->
-      <div class="flex justify-center">
-        <button type="submit"
-          class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-          Submit Daily Financial Data
-        </button>
-      </div>
-    </form>
-  </div>
-
-  <script>
-    // Form element references
-    const form = document.getElementById('financialDataForm');
-    const messageContainer = document.getElementById('messageContainer');
-    
-    // Lunch section elements
-    const lunchCovers = document.getElementById('lunchCovers');
-    const lunchFood = document.getElementById('lunchFood');
-    const lunchBeverage = document.getElementById('lunchBeverage');
-    const lunchSC = document.getElementById('lunchSC');
-    const lunchVAT = document.getElementById('lunchVAT');
-    const lunchDiscount = document.getElementById('lunchDiscount');
-    const lunchAvgSpending = document.getElementById('lunchAvgSpending');
-    const lunchTotal = document.getElementById('lunchTotal');
-    
-    // Dinner section elements
-    const dinnerCovers = document.getElementById('dinnerCovers');
-    const dinnerFood = document.getElementById('dinnerFood');
-    const dinnerBeverage = document.getElementById('dinnerBeverage');
-    const dinnerSC = document.getElementById('dinnerSC');
-    const dinnerIGIC = document.getElementById('dinnerIGIC');
-    const dinnerDiscount = document.getElementById('dinnerDiscount');
-    const nyeDepositPaid = document.getElementById('nyeDepositPaid');
-    const dinnerDepositRedeemed = document.getElementById('dinnerDepositRedeemed');
-    const dinnerAvgSpending = document.getElementById('dinnerAvgSpending');
-    const dinnerTotal = document.getElementById('dinnerTotal');
-    
-    // Daily totals elements
-    const dayTotal = document.getElementById('dayTotal');
-    const totAvgSpending = document.getElementById('totAvgSpending');
-    
-    // Payment methods elements
-    const card = document.getElementById('card');
-    const pettyCash = document.getElementById('pettyCash');
-    const paymentDepositRedeemed = document.getElementById('paymentDepositRedeemed');
-    const refund = document.getElementById('refund');
-    const cash = document.getElementById('cash');
-    
-    // Financial controls elements
-    const sumNetSales = document.getElementById('sumNetSales');
-    const discrepancy = document.getElementById('discrepancy');
-    const cashflow = document.getElementById('cashflow');
-    
-    // Set today's date as default
-    const today = new Date();
-    const formattedDate = today.toISOString().split('T')[0];
-    document.getElementById('date').value = formattedDate;
-    
-    // Calculate lunch total
-    function calculateLunchTotal() {
-      const food = parseFloat(lunchFood.value) || 0;
-      const beverage = parseFloat(lunchBeverage.value) || 0;
-      const sc = parseFloat(lunchSC.value) || 0;
-      const vat = parseFloat(lunchVAT.value) || 0;
-      const discount = parseFloat(lunchDiscount.value) || 0;
-      
-      const total = food + beverage + sc + vat - discount;
-      lunchTotal.value = total.toFixed(2);
-      
-      // Calculate average spending
-      const covers = parseInt(lunchCovers.value) || 0;
-      if (covers > 0) {
-        lunchAvgSpending.value = (total / covers).toFixed(2);
-      } else {
-        lunchAvgSpending.value = '0.00';
-      }
-    }
-    
-    // Calculate dinner total
-    function calculateDinnerTotal() {
-      const food = parseFloat(dinnerFood.value) || 0;
-      const beverage = parseFloat(dinnerBeverage.value) || 0;
-      const sc = parseFloat(dinnerSC.value) || 0;
-      const igic = parseFloat(dinnerIGIC.value) || 0;
-      const discount = parseFloat(dinnerDiscount.value) || 0;
-      const deposit = parseFloat(nyeDepositPaid.value) || 0;
-      
-      const total = food + beverage + sc + igic - discount + deposit;
-      dinnerTotal.value = total.toFixed(2);
-      
-      // Calculate average spending
-      const covers = parseInt(dinnerCovers.value) || 0;
-      if (covers > 0) {
-        dinnerAvgSpending.value = (total / covers).toFixed(2);
-      } else {
-        dinnerAvgSpending.value = '0.00';
-      }
-    }
-    
-    // Calculate daily totals
-    function calculateDailyTotals() {
-      const lunch = parseFloat(lunchTotal.value) || 0;
-      const dinner = parseFloat(dinnerTotal.value) || 0;
-      
-      const total = lunch + dinner;
-      dayTotal.value = total.toFixed(2);
-      
-      // Calculate total average spending
-      const lunchCoversVal = parseInt(lunchCovers.value) || 0;
-      const dinnerCoversVal = parseInt(dinnerCovers.value) || 0;
-      const totalCovers = lunchCoversVal + dinnerCoversVal;
-      
-      if (totalCovers > 0) {
-        totAvgSpending.value = (total / totalCovers).toFixed(2);
-      } else {
-        totAvgSpending.value = '0.00';
-      }
-    }
-    
-    // Calculate financial controls
-    function calculateFinancialControls() {
-      // Sum net sales
-      const lunchFoodVal = parseFloat(lunchFood.value) || 0;
-      const lunchBeverageVal = parseFloat(lunchBeverage.value) || 0;
-      const dinnerFoodVal = parseFloat(dinnerFood.value) || 0;
-      const dinnerBeverageVal = parseFloat(dinnerBeverage.value) || 0;
-      
-      const netSales = lunchFoodVal + lunchBeverageVal + dinnerFoodVal + dinnerBeverageVal;
-      sumNetSales.value = netSales.toFixed(2);
-      
-      // Calculate discrepancy
-      const cashVal = parseFloat(cash.value) || 0;
-      const cardVal = parseFloat(card.value) || 0;
-      const pettyCashVal = parseFloat(pettyCash.value) || 0;
-      const paymentDepositRedeemedVal = parseFloat(paymentDepositRedeemed.value) || 0;
-      const refundVal = parseFloat(refund.value) || 0;
-      
-      const totalPayments = cashVal + cardVal + pettyCashVal + paymentDepositRedeemedVal - refundVal;
-      const dayTotalVal = parseFloat(dayTotal.value) || 0;
-      
-      const disc = totalPayments - dayTotalVal;
-      discrepancy.value = disc.toFixed(2);
-      
-      // Calculate cashflow
-      cashflow.value = cashVal.toFixed(2);
-    }
-    
-    // Add event listeners for automatic calculations
-    // Lunch section
-    [lunchFood, lunchBeverage, lunchSC, lunchVAT, lunchDiscount, lunchCovers].forEach(input => {
-      input.addEventListener('input', () => {
-        calculateLunchTotal();
-        calculateDailyTotals();
-        calculateFinancialControls();
-      });
-    });
-    
-    // Dinner section
-    [dinnerFood, dinnerBeverage, dinnerSC, dinnerIGIC, dinnerDiscount, nyeDepositPaid, dinnerCovers].forEach(input => {
-      input.addEventListener('input', () => {
-        calculateDinnerTotal();
-        calculateDailyTotals();
-        calculateFinancialControls();
-      });
-    });
-    
-    // Payment methods
-    [card, pettyCash, paymentDepositRedeemed, refund, cash].forEach(input => {
-      input.addEventListener('input', () => {
-        calculateFinancialControls();
-      });
-    });
-    
-    // Form submission
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      
-      // Collect form data
-      const formData = new FormData(form);
-      const data = {};
-      
-      for (let [key, value] of formData.entries()) {
-        // Convert date to string format
-        if (key === 'date') {
-          data[key] = value;
-        } else {
-          // Convert numeric values to numbers
-          const numValue = parseFloat(value);
-          data[key] = isNaN(numValue) ? value : numValue;
+            // Day Total
+            const dayTotal = lunchTotal + dinnerTotal;
+            document.getElementById('dayTotal').value = dayTotal.toFixed(2);
+            
+            // Discrepancy
+            const totalPayments = getVal('card') + getVal('cash') + getVal('depositRedeemed') - getVal('pettyCash') - getVal('refund');
+            const discrepancy = totalPayments - dayTotal;
+            document.getElementById('discrepancy').value = discrepancy.toFixed(2);
         }
-      }
-      
-      // Show loading message
-      messageContainer.className = 'bg-blue-50 text-blue-800 p-4 rounded-md';
-      messageContainer.innerHTML = '<p>Submitting data...</p>';
-      messageContainer.classList.remove('hidden');
-      
-      try {
-        // Send data to Google Apps Script
-        const response = await fetch('https://script.google.com/macros/s/AKfycbx-Z0FxC9WyawZfhkZmQ1XDrGFCikOPNpTpnjtK1MD6jsKvYjYLjq3_5YAPqgWdjCxC_g', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
+
+        // Add event listeners to all non-readonly inputs
+        allInputs.forEach(input => {
+            if (!input.readOnly) {
+                input.addEventListener('input', runAllCalculations);
+            }
         });
         
-        // Check if response is OK
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        // --- FORM SUBMISSION ---
+        async function handleSave(e) {
+            e.preventDefault();
+            if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'INCOLLA_IL_TUO_URL_QUI') {
+                showMessage('Errore: Devi inserire l\'URL di Google Apps Script nel codice.', true);
+                return;
+            }
+
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Salvataggio...';
+
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                // Use the element's name attribute as the key
+                const element = form.elements[key];
+                if (element.type === 'date') {
+                    data[key] = value;
+                } else {
+                    data[key] = parseFloat(value) || 0;
+                }
+            }
+
+            try {
+                const response = await fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors', 
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                
+                showMessage('Dati inviati con successo a Google Sheets!');
+                form.reset();
+                document.getElementById('date').valueAsDate = new Date();
+                runAllCalculations(); // Reset calculated fields to 0.00
+
+            } catch (error) {
+                console.error('Errore durante l\'invio:', error);
+                showMessage('Errore nell\'invio dei dati. Controlla la console.', true);
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.textContent = 'Salva Dati';
+            }
         }
         
-        // Try to parse JSON response
-        let result;
-        try {
-          result = await response.json();
-        } catch (parseError) {
-          const responseText = await response.text();
-          console.error('Response text:', responseText);
-          throw new Error(`Failed to parse JSON response: ${parseError.message}. Response text: ${responseText}`);
+        function handleClear() {
+            form.reset();
+            document.getElementById('date').valueAsDate = new Date();
+            runAllCalculations();
+        }
+
+        form.addEventListener('submit', handleSave);
+        clearBtn.addEventListener('click', handleClear);
+
+        function showMessage(text, isError = false) {
+            messageBox.textContent = text;
+            messageBox.className = `fixed top-5 right-5 text-white px-6 py-3 rounded-lg shadow-lg z-50 ${isError ? 'bg-red-500' : 'bg-green-500'}`;
+            
+            setTimeout(() => {
+                messageBox.className += ' hidden';
+            }, 4000);
         }
         
-        if (result.result === 'success') {
-          // Show success message
-          messageContainer.className = 'bg-green-50 text-green-800 p-4 rounded-md';
-          messageContainer.innerHTML = '<p>Data submitted successfully!</p>';
-          
-          // Reset form after successful submission
-          form.reset();
-          document.getElementById('date').value = formattedDate;
-          
-          // Recalculate all values
-          calculateLunchTotal();
-          calculateDinnerTotal();
-          calculateDailyTotals();
-          calculateFinancialControls();
-        } else {
-          throw new Error(result.message || 'Unknown error');
-        }
-      } catch (error) {
-        console.error('Error submitting data:', error);
-        
-        // Show error message
-        messageContainer.className = 'bg-red-50 text-red-800 p-4 rounded-md';
-        messageContainer.innerHTML = `<p>Error submitting data: ${error.message}. Please try again.</p>`;
-      }
-    });
-  </script>
+        // Initial calculation on page load
+        runAllCalculations();
+    </script>
 </body>
 </html>
